@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     bool shouldDie;
     bool dead;
     float health;
+    Dictionary<int, bool> hitBy;
 
     public bool enableAI;
     public float deathVelocity;
@@ -46,6 +47,7 @@ public class EnemyController : MonoBehaviour
         health = maxHealth;
         hpBar = EnemyHealthBarManager.instance.GetBar();
         hpBar.enemy = this;
+        hitBy = new Dictionary<int, bool>();
     }
 
     private void Update()
@@ -69,6 +71,21 @@ public class EnemyController : MonoBehaviour
         r.velocity = deathVelocity * Vector2.up;
         r.AddTorque(deathAngularVelocity);
         r.constraints = RigidbodyConstraints2D.None;
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        Projectile j = collision.GetComponent<Projectile>();
+        if (j != null && j.IsAlive)
+        {
+            bool alreadyHit = false;
+            hitBy.TryGetValue(j.Id, out alreadyHit);
+            if (!alreadyHit)
+            {
+                TakeDamage(j.damage);
+                hitBy.Add(j.Id, true);
+            }
+        }
     }
 
     public void TakeDamage(float amount)

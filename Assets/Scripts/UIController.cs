@@ -57,6 +57,10 @@ public class UIController : MonoBehaviour
             {
                 player.EndJump();
             }
+            if (Input.GetButtonDown("Fire1"))
+            {
+                player.WeaponAttack();
+            }
             if (Input.GetButtonDown("Fire2"))
             {
                 player.CastSpell();

@@ -77,11 +77,5 @@ public class MorpController : MonoBehaviour
             p.Knockback(transform.position, touchKnockback);
             p.Damage(touchDamage);
         }
-
-        Projectile j = collision.GetComponent<Projectile>();
-        if(j != null)
-        {
-            enemy.TakeDamage(j.damage);
-        }
     }
 }

@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
 
     public enum Stats
     {
+        None,
         Strength,
         Dexterity,
         Intelligence,
@@ -38,7 +39,6 @@ public class PlayerController : MonoBehaviour
     Dictionary<Stats, int> stats;
 
     // -Equipment and inventory
-    Dictionary<Equipment.Slot, Equipment> equipment;
     List<IInventoryItem> inventory;
 
     //Public members
@@ -54,9 +54,16 @@ public class PlayerController : MonoBehaviour
     public float damageTimeoutLength;
     public int knockFrameSkip;
 
+    // -Body
+    public Equipment hand1;
+
     // -Stats
     public HealthbarController healthBar;
     public MoneyDisplay money;
+
+    public Equipment ironSword;
+    public SwordSlash slashEffect;
+    public GameObject effectContainer;
 
     public float Health
     {
@@ -133,6 +140,7 @@ public class PlayerController : MonoBehaviour
         damageTimeout = 0;
         updatesSinceKnock = 0;
         MoneyDollars = 0;
+        Equip(ironSword);
     }
 
     void FixedUpdate()
@@ -190,20 +198,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void WeaponAttack()
+    {
+        SwordSlash s = Instantiate(slashEffect, effectContainer.transform);
+        Vector3 direction = Input.mousePosition - CameraController.mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
+        direction.z = 0;
+        s.transform.localRotation = Quaternion.FromToRotation(Vector3.up, direction);
+    }
+
     public void CastSpell()
     {
-        {
-            GameObject newFireball = fireballPool.getItem();
-            newFireball.transform.localPosition = fireballPool.transform.localPosition;
-            Vector3 direction = Input.mousePosition - CameraController.mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
-            direction.z = 0;
-            Vector2 velocity = new Vector2(direction.x, direction.y);
-            velocity.Normalize();
-            newFireball.transform.localPosition += new Vector3(velocity.x, velocity.y);
-            velocity *= fireballSpeed;
-            newFireball.GetComponent<Rigidbody2D>().velocity = velocity;
-            newFireball.transform.localRotation = Quaternion.FromToRotation(Vector3.right, direction);
-        }
+        GameObject newFireball = fireballPool.getItem();
+        newFireball.transform.localPosition = fireballPool.transform.localPosition;
+        Vector3 direction = Input.mousePosition - CameraController.mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
+        direction.z = 0;
+        Vector2 velocity = new Vector2(direction.x, direction.y);
+        velocity.Normalize();
+        newFireball.transform.localPosition += new Vector3(velocity.x, velocity.y);
+        velocity *= fireballSpeed;
+        newFireball.GetComponent<Rigidbody2D>().velocity = velocity;
+        newFireball.transform.localRotation = Quaternion.FromToRotation(Vector3.right, direction);
     }
 
     void Flip()
@@ -213,9 +227,9 @@ public class PlayerController : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
-        Vector3 fireballScale = fireballPool.transform.localScale;
-        fireballScale.x *= -1;
-        fireballPool.transform.localScale = fireballScale;
+        Vector3 effectScale = effectContainer.transform.localScale;
+        effectScale.x *= -1;
+        effectContainer.transform.localScale = effectScale;
     }
 
     public void Damage(float amount)
@@ -245,7 +259,20 @@ public class PlayerController : MonoBehaviour
 
     public void Equip(Equipment e)
     {
-        inventory.Add(equipment[e.itemSlot]);
-        equipment[e.itemSlot] = e;
+        Equipment equipment = null;
+        switch (e.itemSlot)
+        {
+            case Equipment.Slot.Mainhand:
+                equipment = hand1;
+                break;
+        }
+        if (equipment != null)
+        {
+            if (equipment.value >= 0)
+            {
+                inventory.Add(equipment);
+            }
+            equipment.SetInfo(e);
+        }
     }
 }

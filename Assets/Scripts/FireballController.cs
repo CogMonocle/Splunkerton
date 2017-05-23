@@ -13,7 +13,7 @@ public class FireballController : MonoBehaviour
     
     public float lifespan;
 
-    void Start()
+    void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         fireballRigidbody = GetComponent<Rigidbody2D>();
@@ -25,6 +25,7 @@ public class FireballController : MonoBehaviour
     {
         timeAlive = 0;
         isAlive = true;
+        projectile.IsAlive = true;
         if (particles != null)
         {
             particles.Play();
