@@ -64,7 +64,7 @@ public class MorpController : MonoBehaviour
         transform.localScale = scale;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
         Transform t = collision.transform.parent;
         PlayerController p = null;

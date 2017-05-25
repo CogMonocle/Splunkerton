@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, ICombatEntity
 {
     bool shouldDie;
     bool dead;
     float health;
+    float timeDead;
     Dictionary<int, bool> hitBy;
 
     public bool enableAI;
     public float deathVelocity;
     public float deathAngularVelocity;
     public float maxHealth;
+    public float decayTime;
     public Vector2 healthBarPosition;
     public EnemyHealthBarController hpBar;
 
@@ -47,6 +49,7 @@ public class EnemyController : MonoBehaviour
         health = maxHealth;
         hpBar = EnemyHealthBarManager.instance.GetBar();
         hpBar.enemy = this;
+        timeDead = 0;
         hitBy = new Dictionary<int, bool>();
     }
 
@@ -56,6 +59,15 @@ public class EnemyController : MonoBehaviour
         {
             shouldDie = true;
         }
+        if(dead)
+        {
+            timeDead += Time.deltaTime;
+        }
+        if(timeDead > decayTime)
+        {
+            Destroy(hpBar.gameObject);
+            Destroy(gameObject);
+        }
     }
 
     public void Die()
@@ -64,9 +76,9 @@ public class EnemyController : MonoBehaviour
         enableAI = false;
         foreach (Collider2D c in GetComponents<Collider2D>())
         {
-            c.isTrigger = true;
+            //c.isTrigger = true;
         }
-
+        gameObject.layer = 18;
         Rigidbody2D r = GetComponent<Rigidbody2D>();
         r.velocity = deathVelocity * Vector2.up;
         r.AddTorque(deathAngularVelocity);
@@ -82,14 +94,24 @@ public class EnemyController : MonoBehaviour
             hitBy.TryGetValue(j.Id, out alreadyHit);
             if (!alreadyHit)
             {
-                TakeDamage(j.damage);
+                Damage(j.damage);
                 hitBy.Add(j.Id, true);
             }
         }
     }
 
-    public void TakeDamage(float amount)
+    public void Damage(float amount)
     {
         health -= amount;
+    }
+
+    public void Heal(float amount)
+    {
+        health += amount;
+    }
+
+    public void Knockback(Vector3 source, float strength)
+    {
+
     }
 }

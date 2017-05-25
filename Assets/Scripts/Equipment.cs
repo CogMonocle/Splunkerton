@@ -3,24 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable] public class StatDict : SerializableDictionary<PlayerController.Stats, int> { }
+[Serializable] public class StatDict : SerializableDictionary<Stats, int> { }
 [Serializable] public class AttributeDict : SerializableDictionary<Attributes, Attributes> { }
+
+public enum Slot
+{
+    Head,
+    Torso,
+    Mainhand,
+    Offhand,
+    Twohand,
+    Legs,
+    Feet,
+    Trinket,
+    Trinket2
+}
 
 public class Equipment : MonoBehaviour, IInventoryItem
 {
-    
-    public enum Slot
-    {
-        Head,
-        Torso,
-        Mainhand,
-        Offhand,
-        Twohand,
-        Legs,
-        Feet,
-        Trinket,
-        Trinket2
-    }
 
     public Slot itemSlot;
 
@@ -45,7 +45,7 @@ public class Equipment : MonoBehaviour, IInventoryItem
         transform.localScale = e.transform.localScale;
     }
 
-    Sprite IInventoryItem.GetInventorySprite()
+    public Sprite GetInventorySprite()
     {
         return inventorySprite;
     }

@@ -1,21 +1,22 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public enum Stats
+{
+    None,
+    Strength,
+    Dexterity,
+    Intelligence,
+    Toughness,
+    Luck,
+    Wisdom
+}
+
+public class PlayerController : MonoBehaviour, ICombatEntity
 {
     public static PlayerController instance;
-
-    public enum Stats
-    {
-        None,
-        Strength,
-        Dexterity,
-        Intelligence,
-        Toughness,
-        Luck,
-        Wisdom
-    }
 
     // Private members
 
@@ -61,6 +62,12 @@ public class PlayerController : MonoBehaviour
     public HealthbarController healthBar;
     public MoneyDisplay money;
 
+    // -Events
+    List<IEffect> effects;
+    event OnTickHandler OnTick;
+    event OnDamageHandler OnDamage;
+
+    // -Other
     public Equipment ironSword;
     public SwordSlash slashEffect;
     public GameObject effectContainer;
@@ -140,6 +147,7 @@ public class PlayerController : MonoBehaviour
         damageTimeout = 0;
         updatesSinceKnock = 0;
         MoneyDollars = 0;
+        effects = new List<IEffect>();
         Equip(ironSword);
     }
 
@@ -151,6 +159,12 @@ public class PlayerController : MonoBehaviour
         if (damageTimeout < 0 || (isGrounded && updatesSinceKnock >= knockFrameSkip))
         {
             knocked = false;
+        }
+
+        OnTickHandler handler = OnTick;
+        if(handler != null)
+        {
+            handler(this);
         }
 
         if (!knocked)
@@ -175,6 +189,21 @@ public class PlayerController : MonoBehaviour
         damageTimeout -= Time.deltaTime;
         float damageWeight = damageTimeout > 0 ? 1f : 0f;
         playerAnimator.SetLayerWeight(1, damageWeight);
+        List<IEffect> effectsToRemove = new List<IEffect>();
+        foreach(IEffect e in effects)
+        {
+            if(e.GetLifeRemaining(Time.deltaTime) <= 0)
+            {
+                effectsToRemove.Add(e);
+            }
+        }
+        foreach(IEffect e in effectsToRemove)
+        {
+            OnTick -= e.GetTickTrigger();
+            OnDamage -= e.GetDamageTrigger();
+            e.OnEnd(this);
+            effects.Remove(e);
+        }
     }
 
     public void Jump()
@@ -241,6 +270,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Heal(float amount)
+    {
+        Health += amount;
+    }
+
     public void Knockback(Vector3 source, float strength)
     {
         Knockback(new Vector2(source.x, source.y), strength);
@@ -262,7 +296,7 @@ public class PlayerController : MonoBehaviour
         Equipment equipment = null;
         switch (e.itemSlot)
         {
-            case Equipment.Slot.Mainhand:
+            case Slot.Mainhand:
                 equipment = hand1;
                 break;
         }
@@ -274,5 +308,23 @@ public class PlayerController : MonoBehaviour
             }
             equipment.SetInfo(e);
         }
+    }
+
+    public void ApplyEffect(IEffect effect)
+    {
+        if(!effect.DoesSelfStack())
+        {
+            foreach(IEffect e in effects)
+            {
+                if(e.GetType() == effect.GetType())
+                {
+                    e.ResetTimer();
+                    return;
+                }
+            }
+        }
+        OnTick += effect.GetTickTrigger();
+        OnDamage += effect.GetDamageTrigger();
+        effects.Add(effect);
     }
 }

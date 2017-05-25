@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UIController : MonoBehaviour
 {
 
     public static UIController instance;
     static bool paused;
-
     PlayerController player;
 
     public Canvas pauseMenu;
@@ -22,8 +22,8 @@ public class UIController : MonoBehaviour
 
     void Start()
     {
-        
-        if(instance == null)
+
+        if (instance == null)
         {
             instance = this;
         }
@@ -31,7 +31,7 @@ public class UIController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        
+
         player = PlayerController.instance;
         paused = false;
     }

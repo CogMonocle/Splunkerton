@@ -32,12 +32,6 @@ public class EnemyHealthBarController : MonoBehaviour
         }
 
         fillImage.fillAmount = fill;
-
         transform.position = RectTransformUtility.WorldToScreenPoint(mainCam, enemy.transform.position) + enemy.healthBarPosition;
-        
-        if(enemy.Health == 0)
-        {
-            Destroy(gameObject);
-        }
     }
 }

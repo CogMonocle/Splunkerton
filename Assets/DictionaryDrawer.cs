@@ -173,7 +173,7 @@ public abstract class DictionaryDrawer<TK, TV> : PropertyDrawer
 }
 
 [CustomPropertyDrawer(typeof(StatDict))]
-public class MyDictionaryDrawer1 : DictionaryDrawer<PlayerController.Stats, int> { }
+public class MyDictionaryDrawer1 : DictionaryDrawer<Stats, int> { }
 
 [CustomPropertyDrawer(typeof(AttributeDict))]
 public class MyDictionaryDrawer2 : DictionaryDrawer<Attributes, Attributes> { }
