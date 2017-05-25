@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SwordSlash : MonoBehaviour
 {
-    Projectile projectile;
     SpriteRenderer sprite;
     float timeAlive;
 
@@ -14,7 +13,6 @@ public class SwordSlash : MonoBehaviour
 
     void Start()
     {
-        projectile = GetComponentInChildren<Projectile>();
         sprite = GetComponentInChildren<SpriteRenderer>();
     }
 

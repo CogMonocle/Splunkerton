@@ -153,126 +153,157 @@ public class PlayerController : MonoBehaviour, ICombatEntity
 
     void FixedUpdate()
     {
-
-        isGrounded = Physics2D.OverlapCircle(groundSensor.position, groundRadius, groundLayers);
-        updatesSinceKnock++;
-        if (damageTimeout < 0 || (isGrounded && updatesSinceKnock >= knockFrameSkip))
+        if (!dead)
         {
-            knocked = false;
+            isGrounded = Physics2D.OverlapCircle(groundSensor.position, groundRadius, groundLayers);
+            updatesSinceKnock++;
+            if (damageTimeout < 0 || (isGrounded && updatesSinceKnock >= knockFrameSkip))
+            {
+                knocked = false;
+            }
+
+            OnTickHandler handler = OnTick;
+            if (handler != null)
+            {
+                handler(this);
+            }
+
+            if (!knocked)
+            {
+                float move = Input.GetAxis("Horizontal");
+
+                playerAnimator.SetFloat("Speed", Mathf.Abs(move));
+
+                Vector2 velocity = playerRigidBody.velocity;
+                velocity.x = move * maxSpeed;
+                playerRigidBody.velocity = velocity;
+
+                if (move != 0 && (move > 0 != facingRight))
+                    Flip();
+            }
+            playerAnimator.SetFloat("vSpeed", playerRigidBody.velocity.y);
+            playerAnimator.SetBool("Grounded", isGrounded);
         }
-
-        OnTickHandler handler = OnTick;
-        if(handler != null)
-        {
-            handler(this);
-        }
-
-        if (!knocked)
-        {
-            float move = Input.GetAxis("Horizontal");
-
-            playerAnimator.SetFloat("Speed", Mathf.Abs(move));
-
-            Vector2 velocity = playerRigidBody.velocity;
-            velocity.x = move * maxSpeed;
-            playerRigidBody.velocity = velocity;
-
-            if (move != 0 && (move > 0 != facingRight))
-                Flip();
-        }
-        playerAnimator.SetFloat("vSpeed", playerRigidBody.velocity.y);
-        playerAnimator.SetBool("Grounded", isGrounded);
     }
 
     void Update()
     {
-        damageTimeout -= Time.deltaTime;
-        float damageWeight = damageTimeout > 0 ? 1f : 0f;
-        playerAnimator.SetLayerWeight(1, damageWeight);
-        List<IEffect> effectsToRemove = new List<IEffect>();
-        foreach(IEffect e in effects)
+        if (!dead)
         {
-            if(e.GetLifeRemaining(Time.deltaTime) <= 0)
+            damageTimeout -= Time.deltaTime;
+            float damageWeight = damageTimeout > 0 ? 1f : 0f;
+            playerAnimator.SetLayerWeight(1, damageWeight);
+            List<IEffect> effectsToRemove = new List<IEffect>();
+            foreach (IEffect e in effects)
             {
-                effectsToRemove.Add(e);
+                if (e.GetLifeRemaining(Time.deltaTime) <= 0)
+                {
+                    effectsToRemove.Add(e);
+                }
             }
-        }
-        foreach(IEffect e in effectsToRemove)
-        {
-            OnTick -= e.GetTickTrigger();
-            OnDamage -= e.GetDamageTrigger();
-            e.OnEnd(this);
-            effects.Remove(e);
+            foreach (IEffect e in effectsToRemove)
+            {
+                OnTick -= e.GetTickTrigger();
+                OnDamage -= e.GetDamageTrigger();
+                e.OnEnd(this);
+                effects.Remove(e);
+            }
+            if (Health <= 0)
+            {
+                dead = true;
+                GameManagerController.instance.OnPlayerDeath();
+            }
         }
     }
 
     public void Jump()
     {
-        if (isGrounded && !isJumping && !knocked)
+        if (!dead)
         {
-            playerRigidBody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-            isGrounded = false;
-            isJumping = true;
+            if (isGrounded && !isJumping && !knocked)
+            {
+                playerRigidBody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+                isGrounded = false;
+                isJumping = true;
+            }
         }
     }
 
     public void EndJump()
     {
-        if (isJumping && !knocked)
+        if (!dead)
         {
-            Vector2 velocity = playerRigidBody.velocity;
-            velocity.y = Mathf.Min(velocity.y, 0f);
-            playerRigidBody.velocity = velocity;
-            isJumping = false;
+            if (isJumping && !knocked)
+            {
+                Vector2 velocity = playerRigidBody.velocity;
+                velocity.y = Mathf.Min(velocity.y, 0f);
+                playerRigidBody.velocity = velocity;
+                isJumping = false;
+            }
         }
     }
 
     public void WeaponAttack()
     {
-        SwordSlash s = Instantiate(slashEffect, effectContainer.transform);
-        Vector3 direction = Input.mousePosition - CameraController.mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
-        direction.z = 0;
-        s.transform.localRotation = Quaternion.FromToRotation(Vector3.up, direction);
+        if (!dead)
+        {
+            SwordSlash s = Instantiate(slashEffect, effectContainer.transform);
+            Vector3 direction = Input.mousePosition - CameraController.mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
+            direction.z = 0;
+            s.transform.localRotation = Quaternion.FromToRotation(Vector3.up, direction);
+        }
     }
 
     public void CastSpell()
     {
-        GameObject newFireball = fireballPool.getItem();
-        newFireball.transform.localPosition = fireballPool.transform.localPosition;
-        Vector3 direction = Input.mousePosition - CameraController.mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
-        direction.z = 0;
-        Vector2 velocity = new Vector2(direction.x, direction.y);
-        velocity.Normalize();
-        newFireball.transform.localPosition += new Vector3(velocity.x, velocity.y);
-        velocity *= fireballSpeed;
-        newFireball.GetComponent<Rigidbody2D>().velocity = velocity;
-        newFireball.transform.localRotation = Quaternion.FromToRotation(Vector3.right, direction);
+        if (!dead)
+        {
+            GameObject newFireball = fireballPool.getItem();
+            newFireball.transform.localPosition = fireballPool.transform.localPosition;
+            Vector3 direction = Input.mousePosition - CameraController.mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
+            direction.z = 0;
+            Vector2 velocity = new Vector2(direction.x, direction.y);
+            velocity.Normalize();
+            newFireball.transform.localPosition += new Vector3(velocity.x, velocity.y);
+            velocity *= fireballSpeed;
+            newFireball.GetComponent<Rigidbody2D>().velocity = velocity;
+            newFireball.transform.localRotation = Quaternion.FromToRotation(Vector3.right, direction);
+        }
     }
 
     void Flip()
     {
-        facingRight = !facingRight;
+        if (!dead)
+        {
+            facingRight = !facingRight;
 
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
-        Vector3 effectScale = effectContainer.transform.localScale;
-        effectScale.x *= -1;
-        effectContainer.transform.localScale = effectScale;
+            Vector3 scale = transform.localScale;
+            scale.x *= -1;
+            transform.localScale = scale;
+            Vector3 effectScale = effectContainer.transform.localScale;
+            effectScale.x *= -1;
+            effectContainer.transform.localScale = effectScale;
+        }
     }
 
     public void Damage(float amount)
     {
-        if (damageTimeout < 0)
+        if (!dead)
         {
-            Health -= amount;
-            damageTimeout = damageTimeoutLength;
+            if (damageTimeout < 0)
+            {
+                Health -= amount;
+                damageTimeout = damageTimeoutLength;
+            }
         }
     }
 
     public void Heal(float amount)
     {
-        Health += amount;
+        if (!dead)
+        {
+            Health += amount;
+        }
     }
 
     public void Knockback(Vector3 source, float strength)
@@ -312,19 +343,22 @@ public class PlayerController : MonoBehaviour, ICombatEntity
 
     public void ApplyEffect(IEffect effect)
     {
-        if(!effect.DoesSelfStack())
+        if (!dead)
         {
-            foreach(IEffect e in effects)
+            if (!effect.DoesSelfStack())
             {
-                if(e.GetType() == effect.GetType())
+                foreach (IEffect e in effects)
                 {
-                    e.ResetTimer();
-                    return;
+                    if (e.GetType() == effect.GetType())
+                    {
+                        e.ResetTimer();
+                        return;
+                    }
                 }
             }
+            OnTick += effect.GetTickTrigger();
+            OnDamage += effect.GetDamageTrigger();
+            effects.Add(effect);
         }
-        OnTick += effect.GetTickTrigger();
-        OnDamage += effect.GetDamageTrigger();
-        effects.Add(effect);
     }
 }
