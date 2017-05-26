@@ -11,6 +11,7 @@ public class UIController : MonoBehaviour
     PlayerController player;
 
     public Canvas pauseMenu;
+    public Inventory inventory;
 
     public static bool Paused
     {
@@ -57,13 +58,20 @@ public class UIController : MonoBehaviour
             {
                 player.EndJump();
             }
-            if (Input.GetButtonDown("Fire1"))
+            if (!EventSystem.current.IsPointerOverGameObject())
             {
-                player.WeaponAttack();
+                if (Input.GetButtonDown("Fire1"))
+                {
+                    player.WeaponAttack();
+                }
+                if (Input.GetButtonDown("Fire2"))
+                {
+                    player.CastSpell();
+                }
             }
-            if (Input.GetButtonDown("Fire2"))
+            if(Input.GetButtonDown("Inventory"))
             {
-                player.CastSpell();
+                inventory.ToggleVisible();
             }
         }
     }

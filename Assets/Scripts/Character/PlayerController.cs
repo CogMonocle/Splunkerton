@@ -39,9 +39,6 @@ public class PlayerController : MonoBehaviour, ICombatEntity
     int moneyDollars;
     Dictionary<Stats, int> stats;
 
-    // -Equipment and inventory
-    List<IInventoryItem> inventory;
-
     //Public members
 
     // -Controls and movement
@@ -55,8 +52,10 @@ public class PlayerController : MonoBehaviour, ICombatEntity
     public float damageTimeoutLength;
     public int knockFrameSkip;
 
-    // -Body
-    public Equipment hand1;
+    // -Inventory
+    public Inventory inventoryDisplay;
+    public Equipment mainhandSlot;
+    public Equipment torsoSlot;
 
     // -Stats
     public HealthbarController healthBar;
@@ -69,6 +68,7 @@ public class PlayerController : MonoBehaviour, ICombatEntity
 
     // -Other
     public Equipment ironSword;
+    public Equipment ironChestplate;
     public SwordSlash slashEffect;
     public GameObject effectContainer;
 
@@ -149,6 +149,7 @@ public class PlayerController : MonoBehaviour, ICombatEntity
         MoneyDollars = 0;
         effects = new List<IEffect>();
         Equip(ironSword);
+        Equip(ironChestplate);
     }
 
     void FixedUpdate()
@@ -245,7 +246,7 @@ public class PlayerController : MonoBehaviour, ICombatEntity
 
     public void WeaponAttack()
     {
-        if (!dead)
+        if (!dead && mainhandSlot != null)
         {
             SwordSlash s = Instantiate(slashEffect, effectContainer.transform);
             Vector3 direction = Input.mousePosition - CameraController.mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
@@ -327,17 +328,19 @@ public class PlayerController : MonoBehaviour, ICombatEntity
         Equipment equipment = null;
         switch (e.itemSlot)
         {
-            case Slot.Mainhand:
-                equipment = hand1;
+            case SlotType.Mainhand:
+                equipment = mainhandSlot;
                 break;
+            case SlotType.Torso:
+                equipment = torsoSlot;
+                break;
+            default:
+                return;
         }
         if (equipment != null)
         {
-            if (equipment.value >= 0)
-            {
-                inventory.Add(equipment);
-            }
             equipment.SetInfo(e);
+            inventoryDisplay.Equip(e.itemSlot, e);
         }
     }
 

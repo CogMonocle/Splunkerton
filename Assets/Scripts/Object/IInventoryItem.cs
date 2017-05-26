@@ -10,4 +10,6 @@ public enum Attributes
 public interface IInventoryItem
 {
     Sprite GetInventorySprite();
+
+    SlotType GetSlotType();
 }

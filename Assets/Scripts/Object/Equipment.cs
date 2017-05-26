@@ -6,23 +6,10 @@ using UnityEngine;
 [Serializable] public class StatDict : SerializableDictionary<Stats, int> { }
 [Serializable] public class AttributeDict : SerializableDictionary<Attributes, Attributes> { }
 
-public enum Slot
-{
-    Head,
-    Torso,
-    Mainhand,
-    Offhand,
-    Twohand,
-    Legs,
-    Feet,
-    Trinket,
-    Trinket2
-}
-
 public class Equipment : MonoBehaviour, IInventoryItem
 {
 
-    public Slot itemSlot;
+    public SlotType itemSlot;
 
     public StatDict stats;
     public AttributeDict attributes; 
@@ -48,5 +35,10 @@ public class Equipment : MonoBehaviour, IInventoryItem
     public Sprite GetInventorySprite()
     {
         return inventorySprite;
+    }
+
+    public SlotType GetSlotType()
+    {
+        return itemSlot;
     }
 }

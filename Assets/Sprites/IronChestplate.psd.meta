@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 1e7c6aa065a960d49aca311863bdfe0a
-timeCreated: 1495767928
+guid: 5554b7d03815f714c906497dfac44e55
+timeCreated: 1495820708
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: IronSword_0
-    21300002: IronSword_1
+    21300000: IronChestplate_0
+    21300002: IronChestplate_1
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -104,28 +104,28 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: IronSword_0
+      name: IronChestplate_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 128
-        height: 256
+        height: 128
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: IronSword_1
+      name: IronChestplate_1
       rect:
         serializedVersion: 2
         x: 128
-        y: 128
+        y: 0
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
