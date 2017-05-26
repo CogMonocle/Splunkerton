@@ -52,11 +52,6 @@ public class PlayerController : MonoBehaviour, ICombatEntity
     public float damageTimeoutLength;
     public int knockFrameSkip;
 
-    // -Inventory
-    public Inventory inventoryDisplay;
-    public Equipment mainhandSlot;
-    public Equipment torsoSlot;
-
     // -Stats
     public HealthbarController healthBar;
     public MoneyDisplay money;
@@ -67,8 +62,6 @@ public class PlayerController : MonoBehaviour, ICombatEntity
     event OnDamageHandler OnDamage;
 
     // -Other
-    public Equipment ironSword;
-    public Equipment ironChestplate;
     public SwordSlash slashEffect;
     public GameObject effectContainer;
 
@@ -148,8 +141,6 @@ public class PlayerController : MonoBehaviour, ICombatEntity
         updatesSinceKnock = 0;
         MoneyDollars = 0;
         effects = new List<IEffect>();
-        Equip(ironSword);
-        Equip(ironChestplate);
     }
 
     void FixedUpdate()
@@ -246,7 +237,7 @@ public class PlayerController : MonoBehaviour, ICombatEntity
 
     public void WeaponAttack()
     {
-        if (!dead && mainhandSlot != null)
+        if (!dead)
         {
             SwordSlash s = Instantiate(slashEffect, effectContainer.transform);
             Vector3 direction = Input.mousePosition - CameraController.mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
@@ -320,27 +311,6 @@ public class PlayerController : MonoBehaviour, ICombatEntity
             isGrounded = false;
             knocked = true;
             updatesSinceKnock = 0;
-        }
-    }
-
-    public void Equip(Equipment e)
-    {
-        Equipment equipment = null;
-        switch (e.itemSlot)
-        {
-            case SlotType.Mainhand:
-                equipment = mainhandSlot;
-                break;
-            case SlotType.Torso:
-                equipment = torsoSlot;
-                break;
-            default:
-                return;
-        }
-        if (equipment != null)
-        {
-            equipment.SetInfo(e);
-            inventoryDisplay.Equip(e.itemSlot, e);
         }
     }
 

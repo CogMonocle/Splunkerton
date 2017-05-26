@@ -15,7 +15,8 @@ public enum SlotType
     Legs,
     Feet,
     Trinket,
-    Inventory
+    Inventory,
+    Trinket2
 }
 
 public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
@@ -23,34 +24,43 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     static InventorySlot dropped;
 
     Image image;
-    Vector2 dragOffset;
     RectTransform rectTransform;
     IInventoryItem item;
     CanvasGroup group;
     Transform parentToReturnTo;
     InventorySlot placeHolder;
+    Inventory inventory;
 
     public Sprite emptySprite;
     public SlotType slotType = SlotType.Inventory;
-    
+
     void Awake()
     {
         image = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
         group = GetComponent<CanvasGroup>();
+        inventory = GetComponentInParent<Inventory>();
         SetSprite(emptySprite);
     }
-    
+
     public void SetItem(IInventoryItem i)
     {
         item = i;
         if (item != null)
         {
             SetSprite(item.GetInventorySprite());
+            if (slotType != SlotType.Inventory)
+            {
+                inventory.Equip(i as Equipment, slotType);
+            }
         }
         else
         {
             SetSprite(emptySprite);
+            if (slotType != SlotType.Inventory)
+            {
+                inventory.Equip(i as Equipment, slotType);
+            }
         }
     }
 
@@ -66,7 +76,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void SetSprite(Sprite s)
     {
-        if(s == null)
+        if (s == null)
         {
             image.color = Color.clear;
         }
@@ -92,8 +102,6 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (HasItem())
         {
             dropped = null;
-            dragOffset = Vector3.zero;
-            dragOffset = new Vector3(rectTransform.position.x - eventData.position.x, rectTransform.position.y - eventData.position.y);
             parentToReturnTo = transform.parent;
             placeHolder = Instantiate(this, parentToReturnTo);
             placeHolder.name = name;
@@ -108,7 +116,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         if (HasItem())
         {
-            rectTransform.position = eventData.position + dragOffset;
+            rectTransform.position = eventData.position;
         }
     }
 
@@ -132,11 +140,11 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public bool IsCompatible(SlotType itemType)
     {
-        if(slotType == SlotType.Inventory)
+        if (slotType == SlotType.Inventory)
         {
             return true;
         }
-        if(slotType == itemType)
+        if (slotType == itemType)
         {
             return true;
         }

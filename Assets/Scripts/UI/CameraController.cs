@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour
     public Vector3 maxDistance;
     public float percentDistancePerTick;
     public Rect cameraBounds;
-    
+
     void Awake()
     {
         if (mainCam == null)
@@ -36,9 +36,9 @@ public class CameraController : MonoBehaviour
     {
         Vector3 newPosition = cameraTransform.localPosition;
         Vector3 error = target.localPosition - cameraTransform.localPosition;
-        if(Mathf.Abs(error.x) > margin.x)
+        if (Mathf.Abs(error.x) > margin.x)
         {
-            if(Mathf.Abs(error.x) > maxDistance.x)
+            if (Mathf.Abs(error.x) > maxDistance.x)
             {
                 newPosition.x += error.x - Mathf.Sign(error.x) * maxDistance.x;
                 error.x = maxDistance.x;

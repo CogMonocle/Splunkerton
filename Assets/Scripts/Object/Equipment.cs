@@ -12,7 +12,7 @@ public class Equipment : MonoBehaviour, IInventoryItem
     public SlotType itemSlot;
 
     public StatDict stats;
-    public AttributeDict attributes; 
+    public AttributeDict attributes;
 
     public int value;
 
@@ -21,6 +21,11 @@ public class Equipment : MonoBehaviour, IInventoryItem
 
     public void SetInfo(Equipment e)
     {
+        if (e == null)
+        {
+            SetEmpty();
+            return;
+        }
         stats = e.stats;
         attributes = e.attributes;
         value = e.value;
@@ -30,6 +35,16 @@ public class Equipment : MonoBehaviour, IInventoryItem
         transform.localPosition = new Vector3(e.transform.localPosition.x, e.transform.localPosition.y, transform.localPosition.z);
         transform.localRotation = e.transform.localRotation;
         transform.localScale = e.transform.localScale;
+    }
+
+    public void SetEmpty()
+    {
+        stats = new StatDict();
+        attributes = new AttributeDict();
+        value = -1;
+        inventorySprite = null;
+        equippedSprite = null;
+        GetComponent<SpriteRenderer>().sprite = null;
     }
 
     public Sprite GetInventorySprite()

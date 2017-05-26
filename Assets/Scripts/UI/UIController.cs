@@ -69,7 +69,7 @@ public class UIController : MonoBehaviour
                     player.CastSpell();
                 }
             }
-            if(Input.GetButtonDown("Inventory"))
+            if (Input.GetButtonDown("Inventory"))
             {
                 inventory.ToggleVisible();
             }

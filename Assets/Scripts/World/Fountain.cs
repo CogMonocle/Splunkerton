@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fountain : MonoBehaviour {
+public class Fountain : MonoBehaviour
+{
 
     public float regenDuration;
     public float regenPerTick;
@@ -11,7 +12,7 @@ public class Fountain : MonoBehaviour {
     private void OnTriggerStay2D(Collider2D collision)
     {
         PlayerController p = collision.GetComponent<PlayerController>();
-        if(p != null)
+        if (p != null)
         {
             p.ApplyEffect(new FountainRegen(regenDuration, regenPerTick));
         }
