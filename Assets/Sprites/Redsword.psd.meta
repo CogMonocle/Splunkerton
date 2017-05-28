@@ -1,15 +1,11 @@
 fileFormatVersion: 2
-guid: 5d55fc195a4271448a17d4cfe3c7b479
-timeCreated: 1495927969
+guid: 6f6771de05f4d2744a8720a69c4abc32
+timeCreated: 1495931400
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: EquipmentSlots_0
-    21300002: EquipmentSlots_1
-    21300004: EquipmentSlots_2
-    21300006: EquipmentSlots_3
-    21300008: EquipmentSlots_4
-    21300010: EquipmentSlots_5
+    21300000: Redsword_0
+    21300002: Redsword_1
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -108,77 +104,25 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: EquipmentSlots_0
+      name: Redsword_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 52
-        width: 52
-        height: 52
+        x: 80
+        y: 13
+        width: 96
+        height: 230
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: EquipmentSlots_1
+      name: Redsword_1
       rect:
         serializedVersion: 2
-        x: 52
-        y: 52
-        width: 52
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: EquipmentSlots_2
-      rect:
-        serializedVersion: 2
-        x: 104
-        y: 52
-        width: 52
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: EquipmentSlots_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 52
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: EquipmentSlots_4
-      rect:
-        serializedVersion: 2
-        x: 52
-        y: 0
-        width: 52
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: EquipmentSlots_5
-      rect:
-        serializedVersion: 2
-        x: 104
-        y: 0
-        width: 52
+        x: 270
+        y: 204
+        width: 50
         height: 52
       alignment: 0
       pivot: {x: 0, y: 0}

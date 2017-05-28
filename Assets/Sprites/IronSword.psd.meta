@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 1e7c6aa065a960d49aca311863bdfe0a
-timeCreated: 1495767928
+timeCreated: 1495930022
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -112,7 +112,7 @@ TextureImporter:
         width: 128
         height: 256
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -120,12 +120,12 @@ TextureImporter:
       name: IronSword_1
       rect:
         serializedVersion: 2
-        x: 128
-        y: 128
-        width: 128
-        height: 128
+        x: 133
+        y: 139
+        width: 104
+        height: 104
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

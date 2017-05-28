@@ -23,6 +23,7 @@ public class Inventory : MonoBehaviour
 
     public Equipment ironSword;
     public Equipment ironChestplate;
+    public Equipment redSword;
 
     public RectTransform backpack;
 
@@ -37,11 +38,12 @@ public class Inventory : MonoBehaviour
         {
             for (int j = 0; j < inventoryWidth; j++)
             {
-                Instantiate(slotPrefab, backpack).GetComponent<RectTransform>();
+                mainInventory[i * inventoryWidth + j] = Instantiate(slotPrefab, backpack);
             }
         }
         mainhandSlot.SetItem(ironSword);
         torsoSlot.SetItem(ironChestplate);
+        Add(redSword);
     }
 
     void FixedUpdate()
@@ -84,6 +86,19 @@ public class Inventory : MonoBehaviour
                 return;
         }
         equipment.SetInfo(e);
+    }
+
+    public InventorySlot GetSlotByType(SlotType slot)
+    {
+        switch (slot)
+        {
+            case SlotType.Mainhand:
+                return mainhandSlot;
+            case SlotType.Torso:
+                return torsoSlot;
+            default:
+                return mainInventory[0];
+        }
     }
 
     public bool Add(IInventoryItem item)

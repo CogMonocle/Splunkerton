@@ -42,7 +42,6 @@ public class GameManagerController : MonoBehaviour
 
     public void SetRoom(RoomInfo room)
     {
-
         if (currentRooms[0] != null)
         {
             if (room == currentRooms[0])

@@ -19,7 +19,7 @@ public enum SlotType
     Trinket2
 }
 
-public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
     static InventorySlot dropped;
 
@@ -104,7 +104,6 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             dropped = null;
             parentToReturnTo = transform.parent;
             placeHolder = Instantiate(this, parentToReturnTo);
-            placeHolder.name = name;
             placeHolder.transform.SetSiblingIndex(transform.GetSiblingIndex());
             transform.SetParent(parentToReturnTo.parent);
             group.blocksRaycasts = false;
@@ -124,12 +123,15 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (HasItem())
         {
-            Swap(placeHolder);
-            if (dropped != null && dropped.IsCompatible(placeHolder.GetItem().GetSlotType()))
+            transform.SetParent(parentToReturnTo);
+            transform.position = placeHolder.transform.position;
+            transform.SetSiblingIndex(placeHolder.transform.GetSiblingIndex());
+            group.blocksRaycasts = true;
+            Destroy(placeHolder.gameObject);
+            if (dropped != null && dropped.IsCompatible(GetItem().GetSlotType()))
             {
-                placeHolder.Swap(dropped);
+                Swap(dropped);
             }
-            Destroy(gameObject);
         }
     }
 
@@ -137,6 +139,22 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         dropped = this;
     }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(eventData.clickCount == 2 && HasItem())
+        {
+            if(slotType == SlotType.Inventory && item.GetSlotType() != SlotType.Inventory)
+            {
+                Swap(inventory.GetSlotByType(item.GetSlotType()));
+            }
+            if(slotType != SlotType.Inventory && inventory.Add(item))
+            {
+                SetItem(null);
+            }
+        }
+    }
+
 
     public bool IsCompatible(SlotType itemType)
     {
