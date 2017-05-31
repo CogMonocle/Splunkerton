@@ -34,8 +34,6 @@ public class GameManagerController : MonoBehaviour
 
     void Start()
     {
-        //playerLoc = new Vector2(0, 6);
-        //PlayerController.instance.transform.position = playerLoc;
         currentRooms = new RoomInfo[5];
         SetRoom(initialRoom);
     }
@@ -72,19 +70,23 @@ public class GameManagerController : MonoBehaviour
             currentRooms[i + 1] = null;
         }
 
-        roomDirection += 2;
-        roomDirection %= 4;
+        if (roomDirection != -1)
+        {
+            roomDirection += 2;
+            roomDirection %= 4;
+        }
 
         for(int i = 0; i < 4; i++)
         {
             if(i == roomDirection)
             {
                 currentRooms[i + 1] = currentRooms[0];
-               
+                currentRooms[i + 1].scenery.SetActive(false);
             }
             else if(room.adjacentRooms[i] != null)
             {
                 currentRooms[i + 1] = Instantiate(room.adjacentRooms[i], room.transform.position + roomPositions[i], Quaternion.identity, transform);
+                currentRooms[i + 1].scenery.SetActive(false);
             }
         }
         currentRooms[0] = room;
@@ -95,6 +97,7 @@ public class GameManagerController : MonoBehaviour
         {
             e.Spawn();
         }
+        room.scenery.SetActive(true);
     }
 
     public void OnPlayerDeath()

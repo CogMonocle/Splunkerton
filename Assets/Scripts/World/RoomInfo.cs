@@ -9,4 +9,5 @@ public class RoomInfo : MonoBehaviour
     public Vector2 position;
     public Color cameraBG;
     public RoomInfo[] adjacentRooms;
+    public GameObject scenery;
 }

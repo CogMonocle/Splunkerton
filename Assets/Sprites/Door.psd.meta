@@ -1,12 +1,11 @@
 fileFormatVersion: 2
-guid: 3f38a9863575aa04d8fc2b7b79ffb3d5
-timeCreated: 1495993120
+guid: 60b8a34284b338a47a24092b302bad99
+timeCreated: 1496105070
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Gip_0
-    21300002: Gip_1
-    21300004: Gip_2
+    21300000: Door_0
+    21300002: Door_1
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -105,7 +104,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gip_0
+      name: Door_0
       rect:
         serializedVersion: 2
         x: 0
@@ -118,23 +117,10 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Gip_1
+      name: Door_1
       rect:
         serializedVersion: 2
         x: 256
-        y: 0
-        width: 256
-        height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Gip_2
-      rect:
-        serializedVersion: 2
-        x: 512
         y: 0
         width: 256
         height: 256
